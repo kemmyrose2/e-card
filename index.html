@@ -80,13 +80,8 @@ button {
     transition: 0.2s ease;
 }
 
-button:hover {
-    transform: scale(1.05);
-}
-
-button:active {
-    transform: scale(0.95);
-}
+button:hover { transform: scale(1.05); }
+button:active { transform: scale(0.95); }
 
 .heart {
     position: absolute;
@@ -104,18 +99,20 @@ button:active {
 </head>
 <body>
 
-<div class="card">
+<div class="card" id="card">
     <div class="card-inner">
         <div class="card-front">
-            For Josie ❤️<br>
-            <button id="playBtn">Tap to Open & Play Music 🎶</button>
+            For You ❤️<br>
+            <button id="playBtn">Tap to Open 🎶</button>
         </div>
 
         <div class="card-back">
-            <strong>Happy Valentine's Day, Josie 💕</strong><br><br>
-            There's been ups and there's been downs.<br><br>
-            On this Valentine's Day, I wanted you to know that you're the best thing I've ever found online.<br><br>
-            And honestly… I'm really glad I did. ❤️
+            <strong>Happy Valentine's Day! 💖</strong><br><br>
+            Wishing you a day filled with love, laughter, and 
+            all the little joys that make life special!
+            On this Valentine's Day, I want to thank you
+            for being such an important part of my life.<br><br>
+            Kemy ❤️
         </div>
     </div>
 </div>
@@ -126,28 +123,55 @@ button:active {
 </audio>
 
 <script>
-const card = document.querySelector(".card");
+const card = document.getElementById("card");
 const music = document.getElementById("bgMusic");
 const btn = document.getElementById("playBtn");
+let musicStarted = false; // Track if music has started
 
+// Flip card when clicking anywhere
+card.addEventListener("click", function() {
+    card.classList.toggle("open");
+
+    // Start music only once
+    if (!musicStarted) {
+        musicStarted = true;
+        music.volume = 0;
+        music.play().then(() => {
+            let fade = setInterval(() => {
+                if (music.volume < 0.9) {
+                    music.volume += 0.05;
+                } else {
+                    clearInterval(fade);
+                }
+            }, 200);
+        }).catch(() => {
+            alert("If music didn't start, tap again 🎶");
+        });
+    }
+});
+
+// Prevent button click from flipping twice
 btn.addEventListener("click", function(e) {
-    e.stopPropagation();
+    e.stopPropagation(); // prevent double event firing
 
-    card.classList.add("open");
+    card.classList.toggle("open"); // flip card
 
-    // Start music with fade-in
-    music.volume = 0;
-    music.play().then(() => {
-        let fade = setInterval(() => {
-            if (music.volume < 0.9) {
-                music.volume += 0.05;
-            } else {
-                clearInterval(fade);
-            }
-        }, 200);
-    }).catch(() => {
-        alert("If music didn't start, tap again 🎶");
-    });
+    // Start music only once
+    if (!musicStarted) {
+        musicStarted = true;
+        music.volume = 0;
+        music.play().then(() => {
+            let fade = setInterval(() => {
+                if (music.volume < 0.9) {
+                    music.volume += 0.05;
+                } else {
+                    clearInterval(fade);
+                }
+            }, 200);
+        }).catch(() => {
+            alert("If music didn't start, tap again 🎶");
+        });
+    }
 });
 
 // Floating hearts
@@ -164,4 +188,3 @@ for (let i = 0; i < 20; i++) {
 
 </body>
 </html>
-
